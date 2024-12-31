@@ -1,5 +1,5 @@
 class Offline {
-  static defaultRename = "${zh}${crack} ${code} ${title}";
+  static defaultRename = "${zh}${crack} ${code}";
 
   static defaultOptions = {
     tags: ["genres", "actors"],
