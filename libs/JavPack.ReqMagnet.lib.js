@@ -33,4 +33,38 @@ class ReqMagnet extends Req {
       ],
     );
   }
+
+  static sukebei(code) {
+    const REG = /\s/g;
+    const HOST = "https://sukebei.nyaa.si";
+
+    return this.tasks(
+      {
+        url: `${HOST}/?f=0&c=0_0&q=${code}`,
+        headers: {
+          "Referer": HOST,
+          "Sec-Fetch-Dest": "document",
+          "Sec-Fetch-Mode": "navigate",
+          "Sec-Fetch-Site": "same-origin",
+          "Sec-Fetch-User": "?1",
+          "Upgrade-Insecure-Requests": "1",
+        },
+      },
+      [
+        (dom) => {
+          return [...dom.querySelectorAll(".table-responsive table tbody tr")]
+            .map((item) => {
+              return {
+                name: item.querySelector("td:nth-child(2) a").textContent,
+                url: item.querySelector("td:nth-child(3) a:last-child").href,
+                size: item.querySelector("td:nth-child(4)").textContent,
+                date: item.querySelector("td:nth-child(5)").textContent.split(" ")[0],
+                href: item.querySelector("td:nth-child(2) a").getAttribute("href"),
+              };
+            })
+            .filter(({ name }) => name.toUpperCase().includes(code));
+        },
+      ],
+    );
+  }
 }
